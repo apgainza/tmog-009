@@ -1,13 +1,15 @@
 package org.tfoc;
 
+import java.util.List;
+
 /**
  * The class containing the solution to this exercise
  */
 public class Solution {
 
-    public int orangesRotting(int[][] grid) {
+    public List<List<String>> solveNQueens(int n) {
 
-        return 0;
+        return null;
     }
 
 }
