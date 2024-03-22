@@ -15,7 +15,7 @@ public class LogbackLayout
                 ██║   ██║  ██║███████╗    ██║     ███████╗███████╗███████╗╚██████╔╝╚███╔███╔╝███████║██║  ██║██║██║         ╚██████╔╝██║         ╚██████╗╚██████╔╝██████╔╝███████╗
                 ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝     ╚══════╝╚══════╝╚══════╝ ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝          ╚═════╝ ╚═╝          ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝
              
-             The Mirror of Galadriel: Episode #010 - N-Queens
+             The Mirror of Galadriel: Episode #009 - Rotting Oranges
              
              Congratulations on running your first test!
 
