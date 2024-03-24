@@ -12,109 +12,63 @@ import java.util.Objects;
 @Slf4j
 public class Solution {
 
-    public int orangesRotting(int[][] grid) {
+    public static final int ROTTEN_ORANGE = 2;
+    public static final int FRESH_ORANGE = 1;
+    public static final int MINUTES_DEAFULT = -1;
 
-        List<Cell> cells = new ArrayList<>();
+    public int orangesRotting(int[][] grid) {
+        List<Cell> cellsRottenOranges = new ArrayList<>();
         int numTotalFreshOranges = 0;
         int numTotalRottenOranges = 0;
-
-        int total = 0;
+        int minutes = 0;
 
         // Buscamos todas las naranjas podridas
         for (int row = 0; row < grid.length; row++) {
             for (int column = 0; column < grid[row].length; column++) {
-                if (grid[row][column] == 2)
-                    cells.add(new Cell(column, row));
+                if (grid[row][column] == ROTTEN_ORANGE)
+                    cellsRottenOranges.add(new Cell(column, row));
 
-                if (grid[row][column] == 1)
+                if (grid[row][column] == FRESH_ORANGE)
                     numTotalFreshOranges++;
-
             }
         }
 
-        while (!cells.isEmpty()) {
-            cells = calculateNextMinute(grid, cells);
-            numTotalRottenOranges = numTotalRottenOranges + cells.size();
-            if (!cells.isEmpty())
-                total++;
+        while (!cellsRottenOranges.isEmpty()) {
+            cellsRottenOranges = calculateNextMinuteRottenOranges(grid, cellsRottenOranges);
+            numTotalRottenOranges = numTotalRottenOranges + cellsRottenOranges.size();
+            if (!cellsRottenOranges.isEmpty())
+                minutes++;
         }
-
-
         return numTotalRottenOranges == numTotalFreshOranges
-                ? total : -1;
+                ? minutes : MINUTES_DEAFULT;
     }
 
-    public boolean isCellWithFreshOrange(int[][] grid, Cell cell) {
-        return Objects.nonNull(cell) && grid[cell.row][cell.column] == 1;
-    }
-
-    public void setCellWithRottenOrange(int[][] grid, Cell cell) {
-        grid[cell.row][cell.column] = 2;
-    }
-
-    public List<Cell> calculateNextMinute(int[][] grid, List<Cell> cellsRottenOranges) {
+    private List<Cell> calculateNextMinuteRottenOranges(int[][] grid, List<Cell> cellsRottenOranges) {
 
         List<Cell> numRottenOranges = new ArrayList<>();
 
         for (Cell cell : cellsRottenOranges) {
-
-            Cell rightCell = getRightCell(grid[cell.row].length, cell);
-            if (isCellWithFreshOrange(grid, rightCell)) {
-                numRottenOranges.add(rightCell);
-                setCellWithRottenOrange(grid, rightCell);
-            }
-
-            Cell leftCell = getLeftCell(cell);
-            if (isCellWithFreshOrange(grid, leftCell)) {
-                numRottenOranges.add(leftCell);
-                setCellWithRottenOrange(grid, leftCell);
-            }
-
-            Cell upCell = getUpCell(cell);
-            if (isCellWithFreshOrange(grid, upCell)) {
-                numRottenOranges.add(upCell);
-                setCellWithRottenOrange(grid, upCell);
-            }
-
-            Cell downCell = getDownCell(grid.length, cell);
-            if (isCellWithFreshOrange(grid, downCell)) {
-                numRottenOranges.add(downCell);
-                setCellWithRottenOrange(grid, downCell);
-            }
-
+            calculate(grid, Cell.getRightCell(grid[cell.row()].length, cell), numRottenOranges);
+            calculate(grid, Cell.getLeftCell(cell), numRottenOranges);
+            calculate(grid, Cell.getUpCell(cell), numRottenOranges);
+            calculate(grid, Cell.getDownCell(grid.length, cell), numRottenOranges);
         }
-
         return numRottenOranges;
-
     }
 
-
-    public Cell getRightCell(int n, Cell actualCell) {
-        if (actualCell.column + 1 < n)
-            return new Cell(actualCell.column + 1, actualCell.row);
-
-        return null;
+    private void calculate(int[][] grid, Cell cell, List<Cell> numRottenOranges) {
+        if (isCellWithFreshOrange(grid, cell)) {
+            numRottenOranges.add(cell);
+            setCellWithRottenOrange(grid, cell);
+        }
     }
 
-    public Cell getLeftCell(Cell actualCell) {
-        if (actualCell.column - 1 >= 0)
-            return new Cell(actualCell.column - 1, actualCell.row);
-        return null;
+    private boolean isCellWithFreshOrange(int[][] grid, Cell cell) {
+        return Objects.nonNull(cell) && FRESH_ORANGE == grid[cell.row()][cell.column()];
     }
 
-    public Cell getUpCell(Cell actualCell) {
-        if (actualCell.row - 1 >= 0)
-            return new Cell(actualCell.column, actualCell.row - 1);
-        return null;
+    private void setCellWithRottenOrange(int[][] grid, Cell cell) {
+        if (Objects.nonNull(cell))
+            grid[cell.row()][cell.column()] = ROTTEN_ORANGE;
     }
-
-    public Cell getDownCell(int m, Cell actualCell) {
-        if (actualCell.row + 1 < m)
-            return new Cell(actualCell.column, actualCell.row + 1);
-        return null;
-    }
-
-    public record Cell(int column, int row) {
-    }
-
 }
